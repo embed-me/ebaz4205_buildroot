@@ -1,0 +1,110 @@
+/ {
+        chosen {
+                bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw";
+                stdout-path = "serial0:115200n8";
+        };
+
+        aliases {
+                ethernet0 = &gem0;
+                serial0 = &uart1;
+                mmc0 = &sdhci0;
+        };
+
+        memory@0 {
+                device_type = "memory";
+                reg = <0x0 0x10000000>;
+        };
+
+        leds {
+                compatible = "gpio-leds";
+
+		led-green {
+                        label = "led-green";
+			gpios = <&gpio0 55 1>;
+			default-state = "off";
+                        linux,default-trigger = "heartbeat";
+		};
+		led-red {
+                        label = "led-red";
+			gpios = <&gpio0 54 1>;
+			default-state = "off";
+		};
+        };
+
+        buttons {
+                compatible = "gpio-keys-polled";
+                poll-interval = <100>;
+
+                s2-button {
+                        gpios = <&gpio0 20 1>;
+                        label = "s2-button";
+                        default-state = "keep";
+                        linux,code = <106>;
+                        autorepeat;
+                };
+                s3-button {
+                        gpios = <&gpio0 32 1>;
+                        label = "s3-button";
+                        default-state = "keep";
+                        linux,code = <105>;
+                        autorepeat;
+                };
+        };
+};
+
+&clkc {
+       fclk-enable = <0xf>;
+};
+
+&uart1 {
+       status = "okay";
+};
+
+&gem0 {
+        status = "okay";
+        phy-mode = "rgmii-id";
+        phy-handle = <&ethernet_phy0>;
+
+        ethernet_phy0: ethernet-phy@0 {
+                reg = <0>;
+        };
+};
+
+&sdhci0 {
+        status = "okay";
+};
+
+&gpio0 {
+        gpio-mask-low = <0x5600>;
+};
+
+&mc {
+	status = "okay";
+	nand0: flash@e1000000 {
+                status = "okay";
+                nand-ecc-mode = "none";
+                nand-bus-width = <8>;
+                partitions {
+        		compatible = "fixed-partitions";
+        		#address-cells = <1>;
+        		#size-cells = <1>;
+                
+                        partition0: partition@0 {
+        		         label = "partition0";
+                                 reg = <0x0000000 0x1ffffff>;
+                        };
+                        partition1: partition@2000000 {
+        		         label = "partition1";
+                                 reg = <0x2000000 0x3ffffff>;
+                        };
+                        partition2: partition@4000000 {
+        		         label = "partition2";
+                                 reg = <0x4000000 0x5ffffff>;
+                        };
+                        partition3: partition@6000000 {
+        		         label = "partition3";
+                                 reg = <0x6000000 0x7ffffff>;
+                        };
+                };
+        };
+};

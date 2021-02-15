@@ -1,0 +1,6 @@
+/dts-v1/;
+/include/ "zynq-7000.dtsi"
+/include/ "ebaz4205-board.dtsi"
+/include/ "ebaz4205-pl.dtsi"
+/ {
+};

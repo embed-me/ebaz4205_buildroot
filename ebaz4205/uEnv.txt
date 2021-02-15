@@ -1,0 +1,12 @@
+machine_name=ebaz4205-zynq7
+kernel_image=uImage
+loadkernel=load mmc 0 ${kernel_load_address} ${kernel_image}
+devicetree_image=ebaz4205-zynq7.dtb
+loaddtb=load mmc 0 ${devicetree_load_address} ${devicetree_image}
+ramdisk_image=rootfs.cpio.uboot
+loadramdisk=load mmc 0 ${ramdisk_load_address} ${ramdisk_image}
+bootargs=earlyprintk console=ttyPS0,115200 root=/dev/mmcblk0p2 rw rootwait
+bitstream_image=ebaz4205_top.bin
+bitstream_type=load
+fpga_config=fpga ${bitstream_type} 0 ${bitstream_load_address} ${filesize}
+sdboot=if mmcinfo; then run leds_bootstate_0;run uenvboot;echo Copying Linux from SD to RAM...;run mmc_loadfpga && run mmc_loadkernel && run mmc_loaddtb && run mmc_loadramdisk && run leds_bootstate_1; echo Configure FPGA...; run fpga_config && run leds_bootstate_2; echo Handoff to Linux kernel...;bootm ${kernel_load_address} ${ramdisk_load_address} ${devicetree_load_address}; fi
