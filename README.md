@@ -18,16 +18,22 @@ This layer depends on:
 
 ## Build
 
-1. make BR2_EXTERNAL=/<foo>/ebaz4205_buildroot zynq_ebaz4205_defconfig
-2. make 2>&1 | tee build.log
+	make BR2_EXTERNAL=/path/to/ebaz4205_buildroot zynq_ebaz4205_defconfig
+	make 2>&1 | tee build.log
 
 ## Installation
 
-The simpest way to install and test the output products of your
-build is the image. Copy it on an SD-Card and you should be
-good to go:
+The following files from within the output/images/ need to be copied
+to a SD-Card with a FAT-formatted partition with boot flag set:
 
-    dd if=ebaz4205-image-standard-ebaz4205-zynq7.wic of=/dev/<dev> bs=4096
+  * boot.bin
+  * ebaz4205_top.bin (from the Vivado build)
+  * ebaz4205-zynq7.dtb
+  * rootfs.cpio.uboot
+  * u-boot.bin
+  * u-boot.img
+  * uEnv.txt
+  * uImage
 
 ## BSP Details
 
@@ -37,12 +43,11 @@ Basic system initialization.
 
 ### U-Boot(Second Stage Bootloader)
 
-Configures the Bitstream.
-
 Tailored for SD-Boot, since this is how the board is mainly used.
-Wait time during boot is set to zero. In order to interrupt the
-boot process, press and hold Button S2 during boot and you will
-end up in the u-boot console.
+In this distribution, u-boot (instead of the FSBL) is responsible
+for configuring the Bitstream. Wait time during boot is set to zero.
+In order to interrupt the boot process, press and hold Button S2
+during boot and you will end up in the u-boot console.
 
 In order to identify boot issues, the following LED codes are.
 
@@ -58,6 +63,10 @@ In order to identify boot issues, the following LED codes are.
 #### Credentials
 
 The systems default credentials are `root` / `root`.
+
+#### Init
+
+As init system, busybox was chosen.
 
 #### Ethernet
 
