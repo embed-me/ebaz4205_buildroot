@@ -85,7 +85,7 @@ the system is running, the green LED provides a heartbeat.
 
 #### Mount Points
 
-The boot partition is mounted on `/media/mmcplk0p1`.
+The boot partition is mounted on `/media/mmcblk0p1`.
 This allows access to the boot files while the system
 is running (eg. to modify uEnv.txt or provide updates).
 
